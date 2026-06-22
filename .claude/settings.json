@@ -1,0 +1,6 @@
+{
+  "enabledPlugins": {
+    "context7@context7-marketplace": true,
+    "chrome-devtools-mcp@claude-plugins-official": true
+  }
+}

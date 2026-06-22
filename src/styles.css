@@ -1,0 +1,418 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #0b0d12;
+  color: #fff;
+}
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 48px;
+  padding: 56px 24px 80px;
+}
+
+/* ---------- Hero ---------- */
+
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+  max-width: 560px;
+}
+
+.hero-title {
+  margin: 0;
+  font-size: 2.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #8ab4ff, #ff9fd6, #ffd28a);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.hero-desc {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 1rem;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.badge-ok {
+  background: rgba(48, 209, 88, 0.15);
+  color: #30d158;
+  border: 1px solid rgba(48, 209, 88, 0.35);
+}
+
+.badge-warn {
+  background: rgba(255, 159, 10, 0.15);
+  color: #ff9f0a;
+  border: 1px solid rgba(255, 159, 10, 0.35);
+}
+
+/* ---------- Studio ---------- */
+
+.studio {
+  width: 100%;
+  max-width: 1100px;
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 24px;
+}
+
+@media (max-width: 860px) {
+  .studio {
+    grid-template-columns: 1fr;
+  }
+}
+
+.stage {
+  position: relative;
+  min-height: 420px;
+  border-radius: 24px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.stage-bg {
+  position: absolute;
+  inset: -20%;
+  background:
+    radial-gradient(circle at 18% 28%, #ff2d6b 0%, transparent 48%),
+    radial-gradient(circle at 82% 18%, #00e0ff 0%, transparent 48%),
+    radial-gradient(circle at 28% 82%, #ffd400 0%, transparent 48%),
+    radial-gradient(circle at 82% 82%, #8b5cff 0%, transparent 48%),
+    #0c0e16;
+  animation: drift 18s ease-in-out infinite alternate;
+}
+
+/* Independent sibling, not a child of .stage-bg, so its own `drift` transform
+   (scale/rotate, ease-in-out, alternating) never touches this layer.
+   Plain vertical bars with an explicit `background-size` so the loop is
+   trivially exact: one shift of exactly one tile-width, no angle math. */
+.stage-stripes {
+  position: absolute;
+  inset: -20%;
+  background-image: repeating-linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.16) 0px,
+    rgba(255, 255, 255, 0.16) 2px,
+    transparent 2px,
+    transparent 28px
+  );
+  background-size: 28px 100%;
+  animation: stripeFlow 14s linear infinite;
+}
+
+@keyframes stripeFlow {
+  from {
+    background-position-x: 0;
+  }
+  to {
+    background-position-x: -28px;
+  }
+}
+
+@keyframes drift {
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+  100% {
+    transform: scale(1.15) rotate(8deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stage-bg,
+  .stage-stripes {
+    animation: none;
+  }
+}
+
+.sidebar {
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  padding: 20px;
+}
+
+/* ---------- Glass preview ---------- */
+
+.glass-preview {
+  position: relative;
+  color: #fff;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.18),
+    inset 0 1px 1px rgba(255, 255, 255, 0.4),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.08);
+}
+
+.glass-preview::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.85),
+    rgba(255, 255, 255, 0.18) 38%,
+    rgba(255, 255, 255, 0.18) 62%,
+    rgba(255, 255, 255, 0.55)
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* Static fallback for browsers without SVG-filter backdrop support.
+   Assumption: live preview uses a fixed 8px blur fallback (the exported
+   snippet carries the dynamic per-instance value via the exporter). */
+@supports not (backdrop-filter: url(#x)) {
+  .glass-preview {
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .glass-preview {
+    background: rgba(20, 22, 30, 0.85) !important;
+    -webkit-backdrop-filter: blur(4px) !important;
+    backdrop-filter: blur(4px) !important;
+  }
+
+  .stage-bg {
+    filter: saturate(0.6) brightness(0.8);
+  }
+}
+
+/* ---------- Controls ---------- */
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.control-section h3 {
+  margin: 0 0 12px;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.control-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.control-row:last-child {
+  margin-bottom: 0;
+}
+
+.control-row-head {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+}
+
+.control-row label {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.control-value {
+  color: rgba(255, 255, 255, 0.5);
+  font-variant-numeric: tabular-nums;
+}
+
+.control-row input[type="range"] {
+  width: 100%;
+}
+
+.control-row input[type="text"] {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(0, 0, 0, 0.25);
+  color: #fff;
+  font-size: 0.85rem;
+}
+
+.preset-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.preset-btn {
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.preset-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.preset-btn.active {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+/* ---------- Output / Export ---------- */
+
+.output {
+  width: 100%;
+  max-width: 1100px;
+}
+
+.output h2 {
+  margin: 0 0 16px;
+  font-size: 1.25rem;
+}
+
+.export-panel {
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  overflow: hidden;
+}
+
+.export-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.export-tabs {
+  display: flex;
+  gap: 4px;
+}
+
+.export-tab {
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.export-tab.active {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.export-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.export-btn {
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.export-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.export-code {
+  margin: 0;
+  max-height: 360px;
+  overflow: auto;
+  padding: 16px;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.export-snippets {
+  max-height: 420px;
+  overflow: auto;
+}
+
+.export-snippet:not(:last-child) {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.export-snippet-label {
+  margin: 0;
+  padding: 10px 16px 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.export-snippet .export-code {
+  max-height: none;
+  overflow: visible;
+}
+
+/* ---------- Footer ---------- */
+
+.footer {
+  width: 100%;
+  max-width: 1100px;
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+.footer code {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.footer-limitations {
+  list-style: none;
+  margin: 0.75rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
