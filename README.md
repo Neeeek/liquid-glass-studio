@@ -1,4 +1,15 @@
-# Liquid Glass Studio
+
+
+<p align="center">
+  <img src="docs/assets/logo.png" alt="Liquid Glass Studio" width="100%">
+</p>
+
+<h1 align="center">Liquid Glass Studio</h1>
+
+<p align="center">
+  <a href="https://neeeek.github.io/liquid-glass-studio/"><img src="https://img.shields.io/badge/demo-github.io-7c3aed" alt="Live demo"></a>
+  <img alt="GitHub License" src="https://img.shields.io/github/license/Neeeek/liquid-glass-studio">
+</p>
 
 A web app for designing Apple-inspired **liquid glass** surface effects and exporting production-ready CSS/SCSS/SASS. Uses cutting-edge SVG filtering to achieve genuine **light refraction** in Chromium browsers.
 
